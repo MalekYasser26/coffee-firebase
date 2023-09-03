@@ -1,4 +1,5 @@
 import 'package:coffee/models/userModel.dart';
+import 'package:coffee/providers/formProviders.dart';
 import 'package:coffee/screens/Wrapper.dart';
 import 'package:coffee/services/auth/auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -8,7 +9,13 @@ import 'package:provider/provider.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(MyApp());
+  runApp(MultiProvider(
+      providers: [
+        MultiProvider(providers: [
+          ChangeNotifierProvider(create: (context) => FormProviders(),)
+        ])
+      ],
+      child: MyApp()));
 }
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -20,6 +27,7 @@ class MyApp extends StatelessWidget {
       value:AuthService().user ,
       initialData: null,
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         home: Wrapper(),
       ),
     );
